@@ -1,0 +1,53 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: patient-service
+
+  # --- Database Configuration ---
+  datasource:
+    url: jdbc:mysql://localhost:3306/patient_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # --- JPA & Hibernate ---
+  jpa:
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  # --- JSON Handling (Clean Responses) ---
+  jackson:
+    default-property-inclusion: non_null
+
+# --- API Documentation (Swagger) ---
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+# --- Monitoring (Actuator) ---
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics
+  endpoint:
+    health:
+      show-details: always
+
+# --- Logging ---
+logging:
+  level:
+    root: INFO
+    com.healthcare: DEBUG # See your app logs
+    org.hibernate.SQL: DEBUG # See SQL queries
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE # See SQL parameters

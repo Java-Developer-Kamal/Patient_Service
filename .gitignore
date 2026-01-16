@@ -1,33 +1,41 @@
-HELP.md
+# --- Maven ---
 target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/resources/**/target/
+dependency-reduced-pom.xml
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
+# --- IntelliJ IDEA ---
+.idea/
 *.iws
 *.iml
 *.ipr
+out/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+# --- Eclipse ---
+.classpath
+.project
+.settings/
+.springBeans
+bin/
 
-### VS Code ###
-.vscode/
+# --- Java Class Files & Logs ---
+*.class
+*.log
+*.ctxt
+
+# --- Package Files (Usually unwanted in repo) ---
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# --- Operating System Files ---
+.DS_Store
+Thumbs.db
+
+# --- Security (NEVER commit secrets) ---
+.env
+secrets.properties

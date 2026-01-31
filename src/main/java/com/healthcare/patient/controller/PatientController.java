@@ -1,6 +1,7 @@
 package com.healthcare.patient.controller;
 
 import com.healthcare.patient.constant.PatientConstants;
+import com.healthcare.patient.dto.request.HealthMetricRequest;
 import com.healthcare.patient.util.ApiResponse;
 import com.healthcare.patient.dto.request.PatientRequest;
 import com.healthcare.patient.dto.response.PatientResponse;
@@ -10,17 +11,23 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.EntityListeners;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/patients")
 @RequiredArgsConstructor
 @Tag(name = "Patient Management", description = "APIs for managing patient profiles and emergency contacts")
+@EntityListeners(AuditingEntityListener.class)
 public class PatientController {
 
     private final PatientService service;
@@ -92,5 +99,34 @@ public class PatientController {
                 patient, PatientConstants.SUCCESS_RETRIEVE
         );
         return ResponseEntity.ok(response);
+    }
+
+    // ========================================================================
+    // USE CASE 7: HEALTH MONITORING
+    // ========================================================================
+
+        @Operation(summary = "Add Health Metric (Use Case 7)")
+        @PostMapping("/{id}/health-metrics")
+        public ResponseEntity<ApiResponse<Void>> addHealthMetric(
+                @PathVariable Long id,
+                @Valid @RequestBody HealthMetricRequest request) {
+
+            service.addHealthMetric(id, request);
+
+            return new ResponseEntity<>(
+                    ApiResponse.success(null, PatientConstants.MSG_METRIC_ADDED),
+                    HttpStatus.CREATED
+            );
+        }
+
+    @Operation(summary = "View Health Metrics History (Use Case 7)")
+    @GetMapping("/{id}/health-metrics")
+    public ResponseEntity<ApiResponse<List<Object>>> getHealthMetrics(@PathVariable Long id) {
+        // Casting List<HealthMetricResponse> to List<Object> for generic ApiResponse
+        List<Object> metrics = new ArrayList<>(service.getHealthMetrics(id));
+
+        return ResponseEntity.ok(
+                ApiResponse.success(metrics, PatientConstants.MSG_METRICS_RETRIEVED)
+        );
     }
 }

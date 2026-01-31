@@ -1,18 +1,25 @@
 package com.healthcare.patient.service.impl;
 
+import com.healthcare.patient.dto.request.HealthMetricRequest;
 import com.healthcare.patient.dto.request.PatientRequest;
+import com.healthcare.patient.dto.response.HealthMetricResponse;
 import com.healthcare.patient.dto.response.PatientResponse;
 import com.healthcare.patient.entity.EmergencyContact;
+import com.healthcare.patient.entity.HealthMetric;
 import com.healthcare.patient.entity.Patient;
 import com.healthcare.patient.handler.DuplicateResourceException;
 import com.healthcare.patient.handler.ResourceNotFoundException;
+import com.healthcare.patient.mapper.HealthMetricMapper;
 import com.healthcare.patient.mapper.PatientMapper;
+import com.healthcare.patient.repository.HealthMetricRepository;
 import com.healthcare.patient.repository.PatientRepository;
 import com.healthcare.patient.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +29,8 @@ public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository repository;
     private final PatientMapper mapper;
+    private final HealthMetricRepository metricRepository;
+    private final HealthMetricMapper metricMapper;
 
     @Override
     public PatientResponse registerPatient(PatientRequest request) {
@@ -61,5 +70,28 @@ public class PatientServiceImpl implements PatientService {
         return repository.findById(id)
                 .map(mapper::toResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found with ID: " + id));
+    }
+
+    @Override
+    public void addHealthMetric(Long patientId, HealthMetricRequest request) {
+
+        if(!repository.existsById(patientId)){
+            throw new ResourceNotFoundException("Patient not found with ID: " + patientId);
+        }
+        HealthMetric healthMetric = metricMapper.toEntity(request);
+        healthMetric.setPatientId(patientId);
+
+        metricRepository.save(healthMetric);
+    }
+
+    @Override
+    public List<HealthMetricResponse> getHealthMetrics(Long patientId) {
+
+        if (!repository.existsById(patientId)) {
+            throw new ResourceNotFoundException("Patient not found with ID: " + patientId);
+        }
+        return metricRepository.findByPatientIdOrderByMeasuredAtDesc(patientId).stream()
+                .map(metricMapper::toResponse)
+                .toList();
     }
 }

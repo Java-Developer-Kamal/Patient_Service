@@ -20,6 +20,9 @@ public final class PatientConstants {
     public static final String MSG_DOB_PAST = "Date of birth must be in the past";
     public static final String MSG_GENDER_REQUIRED = "Gender is required";
     public static final String MSG_ZIP_INVALID = "Invalid zip code format";
+    public static final String VAL_METRIC_TYPE_REQUIRED = "Metric type is required (e.g., WEIGHT, BP)";
+    public static final String VAL_METRIC_VALUE_REQUIRED = "Metric value is required";
+    public static final String VAL_METRIC_UNIT_REQUIRED = "Metric unit is required";
 
     // --- Emergency Contact Messages ---
     public static final String MSG_CONTACT_NAME_REQUIRED = "Contact name is required";
@@ -29,4 +32,9 @@ public final class PatientConstants {
     // --- Success Messages ---
     public static final String SUCCESS_REGISTER = "Patient registered successfully";
     public static final String SUCCESS_RETRIEVE = "Patient profile retrieved successfully";
+
+    public static final String MSG_METRIC_ADDED = "Health metric recorded successfully";
+    public static final String MSG_METRICS_RETRIEVED = "Health metrics retrieved successfully";
+
+
 }
